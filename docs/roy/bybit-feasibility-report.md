@@ -113,10 +113,13 @@
 - Crypto Loan 新/旧查询接口可用（未执行借贷/调整）
 - Earn 查询接口可用（申购/赎回主网不可用）
 
+## 6.1) WebSocket 验证结果
+- 公共 WS：`wss://stream.bybit.com/v5/public/linear` 订阅 `tickers.MNTPERP` 成功，收到 snapshot + delta
+- 私有 WS：`wss://stream.bybit.com/v5/private` 使用 auth 签名，订阅 `order/position/wallet` 成功
+
 ---
 
 ## 7) 未验证接口（需后续补充）
-- WebSocket 私有通道实际推送验证（已实现指令，未在主网完成订阅验证）
 - User / Subaccount 管理模块
 - RFQ / Spread / Affiliate / Broker
 - Loan 创建与还款接口（若开放）
@@ -125,6 +128,7 @@
 
 ## 8) 结论
 - **交易核心链路（现货/合约/期权）在主网可用**，已通过真实订单验证。
+- **WebSocket 公共/私有订阅可用**，已完成订阅验证。
 - **Earn 申购/赎回在主网不可用**（404）。只能做查询，无法自动申购。
 - **Spot Margin 与 Crypto Loan 部分接口可用，部分接口主网 404**，需保守接入。
 - **Funding rate 可用，但需从 tickers 获取**（funding-rate API 不存在）。
@@ -135,3 +139,15 @@
 - 主网接口可用性明细：`API_AVAILABILITY.md`
 - CLI 主程序：`bybit-assistant.js`
 - 运行脚本：`run.sh` / `.env`
+
+---
+
+## 10) 改进建议（从执行视角）
+1) **接口可用性一致性**：文档有但主网 404（如 Earn 创建订单）会显著影响自动化落地，应保证主网与文档一致。  
+2) **明确区域/权限限制**：文档中明确标注“地域/KYC/VIP限制”，减少试错成本。  
+3) **官方可用性检测 API**：提供“当前账户可用模块/权限”接口，便于自动化系统自检。  
+4) **统一最小下单/最小成交额查询**：避免止损触发后因最小金额失败。  
+5) **Funding rate 单一稳定入口**：建议修复 `/v5/market/funding-rate` 或明确以 tickers 为准。  
+6) **SDK/示例工程**：提供可直接运行的最小示例（含 .env、风控模板）。  
+7) **更友好的错误信息**：区分“参数缺失/权限不足/接口未开放”。  
+8) **新手友好工具链**：提供 Telegram/Discord Bot 示例，降低小白上手门槛。
