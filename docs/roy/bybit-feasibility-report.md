@@ -102,9 +102,16 @@
 - **现货**：MNTUSDC 最小量成交（买入 7.37 MNT）
   - 止盈挂单成功（+20%）
   - 止损单失败原因：触发后订单价值低于最小下单限制
+  - **数量精度限制**：MNTUSDC basePrecision=0.01，过多小数会被拒
+  - **挂单锁仓**：现货挂单会锁定数量，卖出前需先取消挂单
 - **合约**：MNTPERP 10x 开多最小量（7.4 MNT）
   - 止盈/止损设置成功
 - **期权**：MNT 期权仅 USDT 结算，账户无 USDT，无法下单
+
+### 5.1) 最新执行问题（实操反馈）
+- **Dust Convert**：/v5/asset/exchange/quote-apply 对极小余额（0.001312 MNT）返回 `retCode=790000 system error`，疑似低于最小兑换阈值。
+- **CLI 功能缺口**：bybit-assistant.js 未暴露 `order-cancel` 命令；需补充或用直连 API。
+- **position/list 参数约束**：调用时必须提供 symbol 或 settleCoin，否则 retCode=10001。
 
 ---
 
@@ -151,3 +158,5 @@
 6) **SDK/示例工程**：提供可直接运行的最小示例（含 .env、风控模板）。  
 7) **更友好的错误信息**：区分“参数缺失/权限不足/接口未开放”。  
 8) **新手友好工具链**：提供 Telegram/Discord Bot 示例，降低小白上手门槛。
+9) **精度/最小额“可下单参数”接口**：返回直接可用的 qty/price 格式，避免反复试错。
+10) **Convert/Dust API 规则透明**：明确最小兑换阈值与失败原因，避免 system error。
