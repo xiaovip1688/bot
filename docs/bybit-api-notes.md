@@ -125,6 +125,80 @@ curl -s ifconfig.me
 
 ---
 
+## 8. 公共成交记录 Endpoint 错误
+
+| 项目 | 详情 |
+|------|------|
+| **现象** | 调用 `/v5/market/trades` 返回 404 |
+| **原因** | V5 API 中成交记录的正确 endpoint 是 `/v5/market/recent-trade` |
+| **解决** | 使用正确的 endpoint |
+
+```bash
+# 错误
+GET /v5/market/trades?category=linear&symbol=BTCUSDT
+
+# 正确
+GET /v5/market/recent-trade?category=linear&symbol=BTCUSDT&limit=5
+```
+
+---
+
+## 9. 持仓分布接口必填参数
+
+| 项目 | 详情 |
+|------|------|
+| **现象** | 返回 `10001: params error: param period err` |
+| **原因** | `/v5/market/account-ratio` 接口需要 `period` 参数 |
+| **解决** | 添加 period 参数 |
+
+**支持的 period 值：**
+- `5min`, `15min`, `30min`, `1h`, `4h`, `1d`
+
+```bash
+# 正确调用
+GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=1d
+```
+
+---
+
+## 10. 子账户接口权限问题
+
+| 项目 | 详情 |
+|------|------|
+| **现象** | 返回 `Permission denied, please check your API key permissions` |
+| **原因** | 子账户管理接口需要 API Key 开启子账户权限 |
+| **解决** | 1. 在 Bybit 后台为 API Key 添加子账户权限 2. 或使用主账户 API Key |
+
+**相关接口：**
+- `/v5/user/sub-members` — 子账户列表
+- `/v5/user/query-sub-members` — 查询子账户
+- `/v5/user/sub-api-list` — 子账户 API 列表
+
+---
+
+## 11. 永续合约无交割价格
+
+| 项目 | 详情 |
+|------|------|
+| **现象** | 查询 BTCUSDT 交割价格返回 `Symbol Invalid` |
+| **原因** | 永续合约 (LinearPerpetual) 没有交割日期，因此没有交割价格 |
+| **解决** | 交割价格接口仅适用于交割合约 (InverseFutures) |
+
+```bash
+# 永续合约 - 无交割价
+BTCUSDT (contractType: LinearPerpetual) ❌
+
+# 交割合约 - 有交割价
+BTCUSDH25 (contractType: InverseFutures) ✅
+```
+
+**查询交割合约列表：**
+```bash
+GET /v5/market/instruments-info?category=linear&contractType=InverseFutures
+```
+
+---
+
 ## 最佳实践
 
 1. **统一用 Python 脚本** 处理签名和请求，避免 Shell 的各种坑
@@ -139,3 +213,41 @@ curl -s ifconfig.me
 
 - [Bybit API 文档](https://bybit-exchange.github.io/docs/v5/intro)
 - [Bybit V5 API 签名说明](https://bybit-exchange.github.io/docs/v5/guide#authentication)
+
+---
+
+## 附录：接口测试记录
+
+### 第一批测试 (2026-03-04 12:24)
+
+**测试结果：10/10 成功**
+
+| # | 接口 | 状态 |
+|---|------|------|
+| 1 | 账户信息 `/v5/account/info` | ✅ |
+| 2 | 钱包余额 `/v5/account/wallet-balance` | ✅ |
+| 3 | 持仓列表 `/v5/position/list` | ✅ |
+| 4 | 活动订单 `/v5/order/realtime` | ✅ |
+| 5 | 订单历史 `/v5/order/history` | ✅ |
+| 6 | 执行历史 `/v5/execution/list` | ✅ |
+| 7 | 市场行情 `/v5/market/tickers` | ✅ |
+| 8 | K线数据 `/v5/market/kline` | ✅ |
+| 9 | 交易对信息 `/v5/market/instruments-info` | ✅ |
+| 10 | 资金费率 `/v5/market/funding/history` | ✅ |
+
+### 第二批测试 (2026-03-04 12:43)
+
+**测试结果：6/10 直接成功，3/10 修复后成功，1/10 权限问题**
+
+| # | 接口 | 状态 | 备注 |
+|---|------|------|------|
+| 1 | API Key 信息 `/v5/user/query-api` | ✅ | |
+| 2 | 手续费率 `/v5/account/fee-rate` | ✅ | |
+| 3 | 订单簿 `/v5/market/orderbook` | ✅ | |
+| 4 | 公共成交记录 `/v5/market/recent-trade` | ✅ 修复 | 原 endpoint `/trades` 错误 |
+| 5 | 保险基金 `/v5/market/insurance` | ✅ | |
+| 6 | 风险限额 `/v5/market/risk-limit` | ✅ | |
+| 7 | 持仓分布 `/v5/market/account-ratio` | ✅ 修复 | 需要添加 `period` 参数 |
+| 8 | 子账户列表 `/v5/user/sub-members` | ❌ | 需要子账户权限 |
+| 9 | 钱包交易记录 `/v5/account/transaction-log` | ✅ | |
+| 10 | 交割价格 `/v5/market/delivery-price` | ✅ 修复 | 永续合约无交割价，需用交割合约 |
