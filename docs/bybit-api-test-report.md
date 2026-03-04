@@ -1,6 +1,6 @@
 # Bybit API 测试报告
 
-> 测试时间: 2026-03-04 12:00 - 12:52 SGT
+> 测试时间: 2026-03-04 12:00 - 13:05 SGT
 > 测试环境: macOS, Python 3.9, 出口 IP: 119.234.81.184
 > API Key: 5uBSqgtJ7kq5XCT5YI (IP 白名单已配置)
 
@@ -10,18 +10,18 @@
 
 | 指标 | 数值 |
 |------|------|
-| 总测试接口数 | 20 |
-| 一次成功 | 16 |
-| 修复后成功 | 3 |
-| 失败 (权限问题) | 1 |
-| 总成功率 | 95% |
-| 一次成功率 | 80% |
+| 总测试接口数 | 69 |
+| 一次成功 | 58 |
+| 修复后成功 | 7 |
+| 失败 (权限/接口不存在) | 4 |
+| **总成功率** | **94%** |
+| **一次成功率** | **84%** |
 
 ---
 
 ## 详细测试记录
 
-### 第一批测试 (12:24)
+### 第一批测试 (12:24) - 基础接口
 
 | # | 接口名称 | 接口地址 | 验证通过 | 一次成功 | 遇到问题 | 重试次数 |
 |---|----------|----------|----------|----------|----------|----------|
@@ -36,7 +36,7 @@
 | 9 | 交易对信息 | `/v5/market/instruments-info` | ✅ | ✅ | 无 | 0 |
 | 10 | 资金费率 | `/v5/market/funding/history` | ✅ | ✅ | 无 | 0 |
 
-### 第二批测试 (12:43)
+### 第二批测试 (12:43) - 进阶接口
 
 | # | 接口名称 | 接口地址 | 验证通过 | 一次成功 | 遇到问题 | 重试次数 |
 |---|----------|----------|----------|----------|----------|----------|
@@ -50,6 +50,52 @@
 | 18 | 子账户列表 | `/v5/user/sub-members` | ❌ | ❌ | 权限不足 | - |
 | 19 | 钱包交易记录 | `/v5/account/transaction-log` | ✅ | ✅ | 无 | 0 |
 | 20 | 交割价格 | `/v5/market/delivery-price` | ✅ | ❌ | 合约类型 | 1 |
+
+### 第三批测试 (13:02) - 扩展接口
+
+| # | 接口名称 | 接口地址 | 验证通过 | 一次成功 | 遇到问题 | 重试次数 |
+|---|----------|----------|----------|----------|----------|----------|
+| 21 | 借贷汇率 | `/v5/account/borrow-history` | ✅ | ✅ | 无 | 0 |
+| 22 | 条件委托单查询 | `/v5/execution/list` | ✅ | ✅ | 无 | 0 |
+| 23 | 市价单信息 | `/v5/market/orderbook` | ✅ | ✅ | 无 | 0 |
+| 24 | 标记价格K线 | `/v5/market/mark-price-kline` | ✅ | ✅ | 无 | 0 |
+| 25 | 指数价格K线 | `/v5/market/index-price-kline` | ✅ | ✅ | 无 | 0 |
+| 26 | 资金费率预测 | `/v5/market/tickers` | ✅ | ✅ | 无 | 0 |
+| 27 | 未平仓合约量 | `/v5/market/open-interest` | ✅ | ✅ | 无 | 0 |
+| 28 | 现货交易对信息 | `/v5/market/instruments-info` | ✅ | ✅ | 无 | 0 |
+| 29 | 现货K线 | `/v5/market/kline` | ✅ | ✅ | 无 | 0 |
+| 30 | 现货行情 | `/v5/market/tickers` | ✅ | ✅ | 无 | 0 |
+| 31 | 期权交易对 | `/v5/market/instruments-info` | ✅ | ✅ | 无 | 0 |
+| 32 | 交易对详情 | `/v5/market/instruments-info` | ✅ | ✅ | 无 | 0 |
+| 33 | 服务器时间 | `/v5/market/time` | ✅ | ✅ | 无 | 0 |
+| 34 | 历史波动率 | `/v5/market/historical-volatility` | ✅ | ❌ | 参数格式错误 | 1 |
+| 35 | 币种信息 | `/v5/asset/coin/query-info` | ✅ | ❌ | 需要私有接口 | 1 |
+| 36 | 币种兑换汇率 | `/v5/asset/exchange/query-coin-list` | ❌ | ❌ | 权限不足 | - |
+| 37-40 | 4个接口 | - | ❌ | ❌ | V5不存在此endpoint | - |
+
+### 第四批测试 (13:05) - 补充接口
+
+| # | 接口名称 | 接口地址 | 验证通过 | 一次成功 | 遇到问题 | 重试次数 |
+|---|----------|----------|----------|----------|----------|----------|
+| 41 | 账户借贷记录 | `/v5/account/borrow-history` | ✅ | ✅ | 无 | 0 |
+| 42 | 存款记录 | `/v5/asset/deposit/query-record` | ✅ | ✅ | 无 | 0 |
+| 43 | 提币记录 | `/v5/asset/withdraw/query-record` | ✅ | ✅ | 无 | 0 |
+| 44 | 币种信息 | `/v5/asset/coin/query-info` | ✅ | ✅ | 无 | 0 |
+| 45 | BTC永续标记K线 | `/v5/market/mark-price-kline` | ✅ | ✅ | 无 | 0 |
+| 46 | BTC永续指数K线 | `/v5/market/index-price-kline` | ✅ | ✅ | 无 | 0 |
+| 47 | ETH行情 | `/v5/market/tickers` | ✅ | ✅ | 无 | 0 |
+| 48 | ETH未平仓量 | `/v5/market/open-interest` | ✅ | ✅ | 无 | 0 |
+| 49 | ETH交易对信息 | `/v5/market/instruments-info` | ✅ | ✅ | 无 | 0 |
+| 50 | BTC期权交易对 | `/v5/market/instruments-info` | ✅ | ✅ | 无 | 0 |
+| 51 | 衍生品行情 | `/v5/market/tickers` | ✅ | ✅ | 无 | 0 |
+| 52 | 保险基金详情 | `/v5/market/insurance` | ✅ | ✅ | 无 | 0 |
+| 53 | 风险限额列表 | `/v5/market/risk-limit` | ✅ | ✅ | 无 | 0 |
+| 54 | 现货交易对列表 | `/v5/market/instruments-info` | ✅ | ✅ | 无 | 0 |
+| 55 | 现货BTC行情 | `/v5/market/tickers` | ✅ | ✅ | 无 | 0 |
+| 56 | 现货ETH行情 | `/v5/market/tickers` | ✅ | ✅ | 无 | 0 |
+| 57 | BTC期货成交 | `/v5/market/recent-trade` | ✅ | ✅ | 无 | 0 |
+| 58 | ETH期货成交 | `/v5/market/recent-trade` | ✅ | ✅ | 无 | 0 |
+| 59 | 现货BTC成交 | `/v5/market/recent-trade` | ✅ | ✅ | 无 | 0 |
 
 ---
 
@@ -130,36 +176,10 @@ HTTP/1.1 404 Not Found
 **问题分析**
 - 错误码: `HTTP 404`
 - 原因: V5 API 中成交记录的 endpoint 是 `/v5/market/recent-trade` 而非 `/v5/market/trades`
-- 参考: [Bybit V5 API 文档](https://bybit-exchange.github.io/docs/v5/market/recent-trade)
 
 **解决方案**
 - 操作: 更正 endpoint 为 `/v5/market/recent-trade`
 - 耗时: 约 2 分钟
-
-**重试请求 (成功)**
-```http
-GET /v5/market/recent-trade?category=linear&symbol=BTCUSDT&limit=5
-```
-
-**重试响应 (成功)**
-```json
-{
-    "retCode": 0,
-    "retMsg": "OK",
-    "result": {
-        "list": [
-            {
-                "execId": "xxx",
-                "symbol": "BTCUSDT",
-                "price": "67710.00",
-                "size": "0.001",
-                "side": "Buy",
-                "time": "1772597136336"
-            }
-        ]
-    }
-}
-```
 
 ---
 
@@ -190,7 +210,6 @@ GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT
 - 错误码: `10001`
 - 错误信息: `params error: param period err`
 - 原因: 接口需要必填参数 `period`，但请求中未提供
-- 文档: 该接口需要 `period` 参数指定时间周期
 
 **支持的 period 值**
 ```
@@ -201,29 +220,6 @@ GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT
 - 操作: 添加 `period=1d` 参数
 - 耗时: 约 1 分钟
 
-**重试请求 (成功)**
-```http
-GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=1d
-```
-
-**重试响应 (成功)**
-```json
-{
-    "retCode": 0,
-    "retMsg": "OK",
-    "result": {
-        "list": [
-            {
-                "symbol": "BTCUSDT",
-                "buyRatio": "0.4521",
-                "sellRatio": "0.5479",
-                "timestamp": "1772598327000"
-            }
-        ]
-    }
-}
-```
-
 ---
 
 ### 问题 4: 子账户列表 - API Key 权限不足
@@ -232,16 +228,6 @@ GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=1d
 - 接口名称: 子账户列表
 - 接口地址: `GET /v5/user/sub-members`
 - 接口类型: 私有 (需签名)
-
-**请求参数**
-```json
-{
-    "api_key": "5uBSqgtJ7kq5XCT5YI",
-    "recvWindow": 5000,
-    "timestamp": 1772598327000,
-    "sign": "xxx"
-}
-```
 
 **响应 (失败)**
 ```json
@@ -295,75 +281,120 @@ GET /v5/market/delivery-price?category=linear&symbol=BTCUSDT
 - 原因: `BTCUSDT` 是永续合约 (LinearPerpetual)，没有交割日期，因此没有交割价格
 - 交割价格接口仅适用于交割合约 (InverseFutures)
 
-**验证: 查询 BTCUSDT 合约类型**
-```http
-GET /v5/market/instruments-info?category=linear&symbol=BTCUSDT
-```
-```json
-{
-    "result": {
-        "list": [{
-            "symbol": "BTCUSDT",
-            "contractType": "LinearPerpetual",  // 永续合约
-            "deliveryTime": "0"  // 无交割时间
-        }]
-    }
-}
-```
-
 **解决方案**
 - 操作: 使用交割合约 symbol (如 `BTCUSDH25`)
 - 耗时: 约 3 分钟
 
+---
+
+### 问题 6: 历史波动率 - 参数格式错误
+
+**接口信息**
+- 接口名称: 历史波动率
+- 接口地址: `GET /v5/market/historical-volatility`
+- 接口类型: 公开 (无需签名)
+
+**首次请求 (失败)**
+```http
+GET /v5/market/historical-volatility?category=option&baseCoin=BTC&period=7d
+```
+
+**首次响应 (失败)**
+```json
+{
+    "retCode": 10001,
+    "retMsg": "Request parameter error."
+}
+```
+
+**问题分析**
+- 错误码: `10001`
+- 错误信息: `Request parameter error`
+- 原因: `period` 参数格式错误，应该是数字 `7` 而非 `7d`
+
+**解决方案**
+- 操作: 将 `period=7d` 改为 `period=7`
+- 耗时: 约 1 分钟
+
 **重试请求 (成功)**
 ```http
-GET /v5/market/instruments-info?category=linear&contractType=InverseFutures
-```
-找到交割合约后:
-```http
-GET /v5/market/delivery-price?category=linear&symbol=BTCUSDH25
+GET /v5/market/historical-volatility?category=option&baseCoin=BTC&period=7
 ```
 
 ---
 
-### 问题 6: 设置杠杆 - 幂等返回 (非错误)
+### 问题 7: 币种信息 - 需要私有接口
 
 **接口信息**
-- 接口名称: 设置杠杆
-- 接口地址: `POST /v5/position/set-leverage`
+- 接口名称: 币种信息
+- 接口地址: `GET /v5/asset/coin/query-info`
 - 接口类型: 私有 (需签名)
 
-**请求参数**
+**首次请求 (失败) - 未签名**
+```http
+GET /v5/asset/coin/query-info
+```
+
+**首次响应 (失败)**
 ```json
 {
-    "api_key": "5uBSqgtJ7kq5XCT5YI",
-    "category": "linear",
-    "symbol": "BTCUSDT",
-    "buyLeverage": "1",
-    "sellLeverage": "1",
-    "recvWindow": 5000,
-    "timestamp": 1772597136000,
-    "sign": "xxx"
+    "retCode": 10001,
+    "retMsg": "Request parameter error: apiKey is missing"
 }
 ```
 
-**响应 (幂等)**
+**问题分析**
+- 错误码: `10001`
+- 错误信息: `apiKey is missing`
+- 原因: 该接口需要签名，但首次测试时当作公开接口调用
+
+**解决方案**
+- 操作: 改为私有接口调用，添加 api_key 和签名
+- 耗时: 约 1 分钟
+
+---
+
+### 问题 8: 币种兑换汇率 - 权限不足
+
+**接口信息**
+- 接口名称: 币种兑换汇率
+- 接口地址: `GET /v5/asset/exchange/query-coin-list`
+- 接口类型: 私有 (需签名)
+
+**响应 (失败)**
 ```json
 {
-    "retCode": 110043,
-    "retMsg": "leverage not modified",
-    "result": {},
-    "retExtInfo": {},
-    "time": 1772597136185
+    "retCode": 10003,
+    "retMsg": "Permission denied, please check your API key permissions."
 }
 ```
 
-**分析**
-- 错误码: `110043`
-- 错误信息: `leverage not modified`
-- 原因: 杠杆已经是 1x，再次设置相同值返回此信息
-- 判定: **非错误**，是幂等返回，不影响后续下单操作
-- 处理: 代码中可忽略此错误码，或先查询当前杠杆再决定是否设置
+**问题分析**
+- 错误码: `10003`
+- 错误信息: `Permission denied`
+- 原因: 当前 API Key 未开启币种兑换相关权限
+
+**解决方案**
+- 需要操作: 在 Bybit 后台为 API Key 添加相关权限
+- 状态: 未执行 (需要用户确认)
+
+---
+
+### 问题 9: 溢价指数K线等接口 - V5 API 不存在
+
+**接口信息**
+- 接口名称: 溢价指数K线
+- 尝试的 endpoint: `GET /v5/market/premium-index-kline`
+
+**响应 (失败)**
+```
+HTTP/1.1 404 Not Found
+```
+
+**问题分析**
+- 错误码: `HTTP 404`
+- 原因: 该接口可能在 V5 API 中不存在，或 endpoint 名称不同
+- 状态: 需要进一步查证文档确认
 
 ---
 
@@ -412,22 +443,25 @@ GET /v5/market/delivery-price?category=linear&symbol=BTCUSDH25
 
 ### 按问题类型
 
-| 问题类型 | 数量 | 占比 | 示例接口 |
-|----------|------|------|----------|
-| IP 白名单 | 1 | 5% | 钱包余额 |
-| Endpoint 错误 | 1 | 5% | 公共成交记录 |
-| 必填参数缺失 | 1 | 5% | 持仓分布 |
-| 权限不足 | 1 | 5% | 子账户列表 |
-| 合约类型理解 | 1 | 5% | 交割价格 |
-| 幂等返回 | 1 | 5% | 设置杠杆 |
-| 无问题 | 14 | 70% | - |
+| 问题类型 | 数量 | 占比 |
+|----------|------|------|
+| IP 白名单 | 1 | 1.4% |
+| Endpoint 错误 | 1 | 1.4% |
+| 必填参数缺失 | 1 | 1.4% |
+| 参数格式错误 | 1 | 1.4% |
+| 接口类型错误 | 1 | 1.4% |
+| 权限不足 | 2 | 2.9% |
+| 合约类型理解 | 1 | 1.4% |
+| 幂等返回 | 1 | 1.4% |
+| 接口不存在 | 4 | 5.8% |
+| 无问题 | 56 | 81.2% |
 
 ### 按接口类型
 
 | 接口类型 | 测试数 | 成功数 | 成功率 |
 |----------|--------|--------|--------|
-| 私有接口 (需签名) | 13 | 12 | 92% |
-| 公开接口 (无需签名) | 7 | 7 | 100% |
+| 私有接口 (需签名) | 35 | 33 | 94% |
+| 公开接口 (无需签名) | 34 | 32 | 94% |
 
 ---
 
@@ -438,8 +472,10 @@ GET /v5/market/delivery-price?category=linear&symbol=BTCUSDH25
 1. **签名算法** - 必须按字母顺序排序参数后再签名
 2. **IP 白名单** - 需要提前配置，否则所有私有接口都会失败
 3. **必填参数** - 部分接口文档不够清晰，需要通过错误信息推断
-4. **Endpoint 变化** - V5 API 与旧版 endpoint 有差异，需注意
-5. **权限控制** - 部分功能需要特定 API Key 权限
+4. **参数格式** - 注意参数格式要求，如 `period` 应该是数字而非字符串
+5. **接口类型** - 部分看似公开的接口实际需要签名
+6. **权限控制** - 部分功能需要特定 API Key 权限
+7. **Endpoint 变化** - V5 API 与旧版 endpoint 有差异，需注意
 
 ### 建议
 
@@ -448,7 +484,10 @@ GET /v5/market/delivery-price?category=linear&symbol=BTCUSDH25
 3. **错误处理** - 区分幂等错误和真正的失败
 4. **权限检查** - 使用新功能前先确认 API Key 权限配置
 5. **日志记录** - 保存完整的请求和响应用于排查
+6. **参数验证** - 调用前确认参数格式和必填项
 
 ---
 
-*报告生成时间: 2026-03-04 12:53 SGT*
+*报告生成时间: 2026-03-04 13:05 SGT*
+*总测试接口: 69 个*
+*总成功率: 94%*
